@@ -8,68 +8,66 @@ import javax.swing.filechooser.*;
 
 public class FamilyTree
 {
-    
-    private static class TreeNode
-    {
-        private String                    name;
-        private TreeNode                parent;
-        private ArrayList<TreeNode>        children;
+	private static class TreeNode {
+        private String name;
+        private TreeNode parent;
+        private ArrayList<TreeNode> children;
         
-        
-        TreeNode(String name)
-        {
+        TreeNode(String name) {
             this.name = name;
             children = new ArrayList<>();
         }
         
-        
-        String getName()
-        {
+        String getName() {
             return name;
         }
         
-        
-        void addChild(TreeNode childNode)
-        {
+        void addChild(TreeNode childNode) {
             // Add childNode to this node's children list. Also
             // set childNode's parent to this node.
+            children.add(childNode);
+            childNode.parent = this;
         }
         
+        TreeNode getParent() {
+            return parent;
+        }
         
         // Searches subtree at this node for a node
         // with the given name. Returns the node, or null if not found.
-        TreeNode getNodeWithName(String targetName)
-        {
+        TreeNode getNodeWithName(String targetName) {
             // Does this node have the target name?
-            if (?????)
+            if (this.name.equals(targetName))
                 return this;
                     
             // No, recurse. Check all children of this node.
-            for (TreeNode child: children)
-            {
-                // If child.getNodeWithName(targetName) returns a non-null node,
-                // then that's the node we're looking for. Return it.
+            for (TreeNode child: children) {
+                TreeNode result = child.getNodeWithName(targetName);
+                if (result != null)
+                    return result;
             }
             
             // Not found anywhere.
             return null;
         }
         
-        
         // Returns a list of ancestors of this TreeNode, starting with this node’s parent and
-        // ending with the root. Order is from recent to ancient.
-        ArrayList<TreeNode> collectAncestorsToList()
-        {
+        // ending with the root. Order is from recent to ancient
+        ArrayList<TreeNode> collectAncestorsToList() {
             ArrayList<TreeNode> ancestors = new ArrayList<>();
-
-            // ?????  Collect ancestors of this TreeNode into the array list. HINT: going up
-            // the nodes of a tree is like traversing a linked list. If that isn’t clear,
-            // draw a tree, mark any leaf node, and then mark its ancestors in order from
-            // recent to ancient. Expect a question about this on the final exam.
-
+            TreeNode currentNode = this;
+            
+            // Traverse up the tree until reaching the root (where parent is null)
+            while (currentNode.parent != null) {
+                ancestors.add(currentNode.parent);
+                currentNode = currentNode.parent;
+            }
+            
+            // Reverse the list to maintain the order from recent to ancient
+            Collections.reverse(ancestors);
+            
             return ancestors;
         }
-        
         
         public String toString()
         {
